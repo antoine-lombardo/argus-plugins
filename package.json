@@ -1,0 +1,11 @@
+{
+  "name": "argus-plugins",
+  "private": true,
+  "description": "Official + reference Argus plugins",
+  "scripts": {
+    "build:example": "npm run build --prefix packages/example",
+    "pack:example": "npm run pack --prefix packages/example",
+    "publish:experimental": "node scripts/publish-to-index.mjs --package packages/example --channel experimental",
+    "publish:main": "node scripts/publish-to-index.mjs --package packages/example --channel main"
+  }
+}

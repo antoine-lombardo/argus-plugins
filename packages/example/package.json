@@ -1,0 +1,32 @@
+{
+  "name": "@argus-tv/plugin-example",
+  "version": "0.1.0",
+  "description": "Canonical Argus plugin example — copy this package to start a new provider plugin.",
+  "license": "MIT",
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "manifest.json"
+  ],
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "build:watch": "node scripts/build.mjs --watch",
+    "pack": "node scripts/pack.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "clean": "rm -rf dist out"
+  },
+  "devDependencies": {
+    "@argus-tv/plugin-sdk": "file:../../../argus-plugin-sdk",
+    "esbuild": "^0.25.0",
+    "typescript": "^5.5.0"
+  }
+}

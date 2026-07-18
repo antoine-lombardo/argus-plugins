@@ -1,0 +1,53 @@
+name: Promote official
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: promote-official
+  cancel-in-progress: false
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout argus-plugins
+        uses: actions/checkout@v4
+        with:
+          path: argus-plugins
+
+      - name: Checkout argus-repo-index
+        uses: actions/checkout@v4
+        with:
+          repository: antoine-lombardo/argus-repo-index
+          token: ${{ secrets.REPO_INDEX_TOKEN }}
+          path: argus-repo-index
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Promote example to main channel
+        working-directory: argus-plugins
+        run: |
+          node scripts/publish-to-index.mjs \
+            --package packages/example \
+            --channel main \
+            --index-repo "$GITHUB_WORKSPACE/argus-repo-index"
+
+      - name: Commit and push index
+        working-directory: argus-repo-index
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --staged --quiet; then
+            echo "No index changes"
+            exit 0
+          fi
+          git commit -m "chore: promote plugin build to main from argus-plugins@${GITHUB_SHA::7}"
+          git push
